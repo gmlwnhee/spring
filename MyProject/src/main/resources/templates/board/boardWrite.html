@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시판 작성</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></link>
+
+<style>
+	table {
+		width: 100%;
+		border: 3px solid #87CEEB;
+	}
+</style>
+</head>
+<body>
+	<div class="container outset">
+		<h2 class="text-primary">게시판 작성</h2>
+		<form id="frm" name="frm" method="POST" action="/board/boardInsert">
+			<table class="table">
+				<tr>
+					<td class="text-primary">제목</td>
+					<td><input type="text" class="form-control" id="title"
+						name="title" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea class="form-control" rows="5"
+							id="contents" name="contents"></textarea></td>
+				</tr>
+			</table>
+			<input type="submit" id="submit" value="저장" class="btn btn-info">
+		</form>
+
+	</div>
+
+</body>
+</html>

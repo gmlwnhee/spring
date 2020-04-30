@@ -8,4 +8,8 @@ public interface BoardService {
 
 	List<BoardDto> boardList();
 
+	void boardInsert(BoardDto board);
+
+	BoardDto boardDetail(int boardIdx);
+
 }

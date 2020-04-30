@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import kr.inhatc.spring.board.dto.BoardDto;
 import kr.inhatc.spring.board.service.BoardService;
 
@@ -31,14 +33,33 @@ public class BoardController {
 		return "index"; // index.html
 	}
 	
-	@RequestMapping("/board/boardList.do")
+	@RequestMapping("/board/boardList")
 	public String boardList(Model model) {
+		// model은 controller에서 html로 보낼 때
 		List<BoardDto> list = boardService.boardList();
-		System.out.println("===========> " + list.size());
+		//System.out.println("===========> " + list.size());
 		model.addAttribute("list", list);
 		return "board/boardList";
-		
-		
+	}
+	
+	@RequestMapping("/board/boardWrite")
+	public String boardWrite() {
+		return "board/boardWrite";
+	}
+	
+	@RequestMapping("/board/boardInsert")
+	public String boardInsert(BoardDto board) {
+		boardService.boardInsert(board);
+		return "redirect:/board/boardList";
+	}
+	
+	@RequestMapping("/board/boardDetail")
+	public String boardDetail(@RequestParam int boardIdx, Model model) {
+		BoardDto board = boardService.boardDetail(boardIdx);
+		model.addAttribute("board", board);
+		//System.out.println(board);
+		//System.out.println("=========> boardIdx : " + boardIdx);
+		return "board/boardDetail";
 	}
 	
 //	@RequestMapping("/board/boardList.do")

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시판 상세</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></link>
+
+<style>
+table {
+	width: 100%;
+	border: 3px solid #87CEEB;
+}
+</style>
+</head>
+<body>
+	<div class="container outset">
+		<h2 class="text-primary">게시판 상세</h2>
+		<form id="frm" name="frm" method="POST">
+			<table class="table">
+				<colgroup>
+					<col width="15%" />
+					<col width="35%" />
+					<col width="15%" />
+					<col width="35%" />
+				</colgroup>
+				<!-- <caption>게시글 상세내용</caption> -->
+				<tbody>
+					<tr>
+						<th class="info" scope="row">글번호</th>
+						<td th:text="${board.boardIdx}"></td>
+						<th class="info" scope="row">조회수</th>
+						<td th:text="${board.hitCnt}"></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">작성자</th>
+						<td th:text="${board.creatorId}"></td>
+						<th class="info" scope="row">작성일</th>
+						<td th:text="${board.createDateTime}"></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">제목</th>
+						<td colspan="3">
+							<input class="form-control" type="text" id="title" name="title" th:value="${board.title}"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<textarea class="form-control" rows="5" title="내용" id="contents" name="contents" th:text="${board.contents}"></textarea>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<input type="button" id="list" value="목록으로" class="btn btn-info">
+			<input type="button" id="edit" value="수정하기" class="btn btn-info">
+			<input type="button" id="delete" value="삭제하기" class="btn btn-info">
+		</form>
+
+	</div>
+
+</body>
+</html>
