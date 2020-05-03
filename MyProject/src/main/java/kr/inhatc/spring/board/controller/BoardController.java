@@ -62,6 +62,20 @@ public class BoardController {
 		return "board/boardDetail";
 	}
 	
+	@RequestMapping("/board/boardUpdate")
+	public String boardUpdate(BoardDto board) {
+		System.out.println("=========> Index : " + board.getBoardIdx());
+		System.out.println("=========> Title : " + board.getTitle());
+		boardService.boardUpdate(board);
+		return "redirect:/board/boardList";
+	}
+	
+	@RequestMapping("/board/boardDelete")
+	public String boardDelete(@RequestParam("boardIdx") int boardIdx) {
+		boardService.boardDelete(boardIdx);
+		return "redirect:/board/boardList";
+	}
+	
 //	@RequestMapping("/board/boardList.do")
 //	public ModelAndView boardList() {
 //		ModelAndView mv = new ModelAndView("board/boardList");

@@ -12,4 +12,8 @@ public interface BoardService {
 
 	BoardDto boardDetail(int boardIdx);
 
+	void boardUpdate(BoardDto board);
+
+	void boardDelete(int boardIdx);
+
 }
