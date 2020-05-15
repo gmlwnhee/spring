@@ -16,7 +16,7 @@
 <body>
 	<div class="container outset">
 		<h2 class="text-primary">게시판 작성</h2>
-		<form id="frm" name="frm" method="POST" action="/board/boardInsert">
+		<form id="frm" name="frm" method="POST" action="/board/boardInsert" enctype="multipart/form-data">
 			<table class="table">
 				<tr>
 					<td class="text-primary">제목</td>
@@ -28,6 +28,7 @@
 							id="contents" name="contents"></textarea></td>
 				</tr>
 			</table>
+			<input type="file" id="files" name="files" multiple="multiple">
 			<input type="submit" id="submit" value="저장" class="btn btn-info">
 		</form>
 

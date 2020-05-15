@@ -2,11 +2,14 @@ package kr.inhatc.spring.board.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.inhatc.spring.board.dto.BoardDto;
 import kr.inhatc.spring.board.service.BoardService;
@@ -24,6 +27,8 @@ import kr.inhatc.spring.board.service.BoardService;
 @Controller // thymeleaf 의존 추가
 public class BoardController {
 	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	//컨트롤러에 서비스를 불러옴
 	@Autowired
 	private BoardService boardService;
@@ -37,7 +42,8 @@ public class BoardController {
 	public String boardList(Model model) {
 		// model은 controller에서 html로 보낼 때
 		List<BoardDto> list = boardService.boardList();
-		//System.out.println("===========> " + list.size());
+		log.debug("===========> " + list.size());
+		//위와 같이 log로 찍을 수도 있음 System.out.println("===========> " + list.size());
 		model.addAttribute("list", list);
 		return "board/boardList";
 	}
@@ -48,8 +54,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/board/boardInsert")
-	public String boardInsert(BoardDto board) {
-		boardService.boardInsert(board);
+	public String boardInsert(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) {
+		boardService.boardInsert(board, multipartHttpServletRequest);
 		return "redirect:/board/boardList";
 	}
 	
