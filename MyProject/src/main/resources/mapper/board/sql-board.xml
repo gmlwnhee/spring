@@ -73,4 +73,10 @@
 		FROM T_FILE
 		WHERE board_idx = #{boardIdx} AND deleted_yn = 'N'
 	</select>
+	
+	<select id="selectFileInfo" parameterType="map" resultType="kr.inhatc.spring.board.dto.FileDto">
+		SELECT original_file_name, stored_file_path, file_size
+		FROM T_FILE
+		WHERE idx = #{idx} AND board_idx = #{boardIdx} AND deleted_yn = 'N'
+	</select>
 </mapper>
