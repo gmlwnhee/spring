@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사용자 등록</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></link>
+
+<style>
+table {
+	width: 100%;
+	border: 3px solid #87CEEB;
+}
+</style>
+</head>
+<body>
+	<div class="container outset">
+		<h2 class="text-primary">사용자 등록</h2>
+		<form id="frm" name="frm" method="POST" action="/member/memberInsert"
+			enctype="multipart/form-data">
+			<table class="table">
+				<tr>
+					<td class="text-primary">번호</td>
+					<td><input type="text" class="form-control" id="memberId"
+						name="memberId" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">이름</td>
+					<td><input type="text" class="form-control" id="name"
+						name="name" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">이메일</td>
+					<td><input type="email" class="form-control" id="email"
+						name="email" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">비밀번호</td>
+					<td><input type="password" class="form-control" id="pw"
+						name="pw" /></td>
+				</tr>
+
+			</table>
+			<input type="file" id="files" name="files"> <input
+				type="submit" id="submit" value="저장" class="btn btn-info">
+		</form>
+
+	</div>
+
+</body>
+</html>

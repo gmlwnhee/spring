@@ -8,6 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+//	@Override
+//	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+//		registry.addResourceHandler("/images-member/**/**").addResourceLocations("file:images-member/**/");
+//	}
 	// 메모리에 올려야 오류안나지 Bean
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
@@ -17,5 +21,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		commonsMultipartResolver.setMaxUploadSizePerFile(5 * 1024 * 1024);	// 5MB
 		return commonsMultipartResolver;
 	}
+
+
+	
+	
 		
 }

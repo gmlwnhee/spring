@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.inhatc.spring.member.mapper.MemberMapper">
+	<select id='memberList'
+		resultType="kr.inhatc.spring.member.dto.MemberDto">
+		SELECT member_id, name, email, TO_CHAR(join_date,
+		'YYYY-MM-DD') AS join_date
+		FROM MEMBER
+		ORDER BY member_id DESC
+	</select>
+
+	<insert id="memberInsert"
+		parameterType="kr.inhatc.spring.member.dto.MemberDto">
+		INSERT INTO MEMBER (MEMBER_ID, EMAIL, JOIN_DATE, NAME,
+		PW, ROLE)
+		VALUES (#{memberId}, #{email}, sysdate, #{name}, #{pw},
+		'user')
+	</insert>
+
+	<select id="memberDetail" parameterType="String"
+		resultType="kr.inhatc.spring.member.dto.MemberDto">
+		SELECT MEMBER_ID, NAME, EMAIL, PW, TO_CHAR(JOIN_DATE,
+		'YYYY-MM-DD') AS JOIN_DATE
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+
+	<update id="memberUpdate" parameterType="kr.inhatc.spring.member.dto.MemberDto">
+		UPDATE MEMBER
+		SET NAME = #{name},
+		EMAIL = #{email},
+		PW = #{pw}
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+
+	<delete id="memberDelete" parameterType="String">
+		DELETE FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</delete>
+
+	<insert id="memberFileInsert"
+		parameterType="kr.inhatc.spring.member.dto.ImageDto">
+		INSERT INTO T_IMAGE(
+		IDX,
+		MEMBER_ID,
+		ORIGINAL_FILE_NAME,
+		STORED_FILE_PATH,
+		FILE_SIZE
+		)
+		SELECT image_seq.nextval, B.* FROM(
+		<foreach item="item" collection="list" separator="UNION ALL ">
+			SELECT #{item.memberId} as member_id,
+			#{item.originalFileName} as original_file_name,
+			#{item.storedFilePath} as stored_file_path,
+			#{item.fileSize} as file_size
+			FROM DUAL
+		</foreach>
+		) B
+	</insert>
+
+	<select id="selectBoardFile" parameterType="String" resultType="String">
+		SELECT stored_file_path
+		FROM T_IMAGE
+		WHERE MEMBER_ID = #{memberId} AND deleted_yn = 'N'
+	</select>
+</mapper>

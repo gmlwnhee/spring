@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.inhatc.spring.board.dto.FileDto;
+import kr.inhatc.spring.member.dto.ImageDto;
 
 @Component
 public class FileUtils {
@@ -67,6 +68,73 @@ public class FileUtils {
 					boardFile.setOriginalFileName(multipartFile.getOriginalFilename());
 					boardFile.setStoredFilePath(path + "/" + newFileName);
 					fileList.add(boardFile);
+
+					file = new File(path + "/" + newFileName);
+					try {
+						multipartFile.transferTo(file);
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		}
+
+		return fileList;
+	}
+
+	// member 이미지
+	public List<ImageDto> parseFileInfo(String memberId,
+			MultipartHttpServletRequest multipartHttpServletRequest) {
+		if(ObjectUtils.isEmpty(multipartHttpServletRequest)) {
+			return null;
+		}
+
+		List<ImageDto> fileList = new ArrayList<ImageDto>();
+
+		// 파일이 업로드될 폴더 생성
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMdd");
+		ZonedDateTime current = ZonedDateTime.now();
+		String path = "src/main/resources/static/images-member/" + current.format(format);
+
+		File file = new File(path);
+		if(file.exists() == false) {
+			file.mkdir();
+		}
+
+		Iterator<String> iter = multipartHttpServletRequest.getFileNames();
+
+		String originalFileExtension = null;
+		while(iter.hasNext()) {
+			List<MultipartFile> list = multipartHttpServletRequest.getFiles(iter.next());
+
+			for (MultipartFile multipartFile : list) {
+				if(multipartFile.isEmpty() == false) {
+
+					String contentType = multipartFile.getContentType();
+					if(ObjectUtils.isEmpty(contentType)) {
+						break;
+					} else {
+						if(contentType.contains("image/jpeg")) {
+							originalFileExtension = ".jpg";
+						} else if(contentType.contains("image/png")) {
+							originalFileExtension = ".png";
+						} else if(contentType.contains("image/gif")) {
+							originalFileExtension = ".gif";
+						} else {
+							break;
+						}
+					}
+					String newFileName = Long.toString(System.nanoTime()) + originalFileExtension;
+
+					ImageDto imageFile = new ImageDto();
+					imageFile.setMemberId(memberId);
+					imageFile.setFileSize(multipartFile.getSize());
+					imageFile.setOriginalFileName(multipartFile.getOriginalFilename());
+					imageFile.setStoredFilePath(path + "/" + newFileName);
+					fileList.add(imageFile);
 
 					file = new File(path + "/" + newFileName);
 					try {
