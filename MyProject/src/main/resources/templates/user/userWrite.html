@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사용자 등록</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></link>
+
+<style>
+	table {
+		width: 100%;
+		border: 3px solid #87CEEB;
+	}
+</style>
+</head>
+<body>
+	<div class="container outset">
+		<h2 class="text-primary">사용자 등록</h2>
+		<form id="frm" name="frm" method="POST" action="/user/userInsert">
+			<table class="table">
+				<tr>
+					<td class="text-primary">아이디</td>
+					<td><input type="text" class="form-control" id="id"
+						name="id" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">패스워드</td>
+					<td><input type="text" class="form-control" id="pw"
+						name="pw" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">이름</td>
+					<td><input type="text" class="form-control" id="name"
+						name="name" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">이메일</td>
+					<td><input type="text" class="form-control" id="email"
+						name="email" /></td>
+				</tr>
+				<tr>
+					<td class="text-primary">권한</td>
+					<td><input type="text" class="form-control" id="role"
+						name="role" /></td>
+				</tr>
+
+			</table>
+			<input type="submit" id="submit" value="저장" class="btn btn-info">
+		</form>
+
+	</div>
+
+</body>
+</html>
