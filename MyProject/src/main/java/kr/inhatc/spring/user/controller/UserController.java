@@ -27,7 +27,7 @@ public class UserController {
 	@RequestMapping("/")
 	public String hello() {
 		//log.debug("===========>" + "여기!!!");
-		return "redirect:/user/userList";
+		return "index";
 	}
 	
 	// GET(read), POST(creat), PUT(update), DELETE(delete)

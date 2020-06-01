@@ -33,7 +33,7 @@ import kr.inhatc.spring.board.service.BoardService;
 
 @Controller // thymeleaf 의존 추가
 public class BoardController {
-	
+	 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	//컨트롤러에 서비스를 불러옴

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<style>
+.footer {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	height: 60px;
+	width: 100%;
+	background: #525864;
+	color: white;
+}
+</style>
+<head th:replace="fragments/config :: configFragment"></head>
+
+<header th:replace="fragments/menu :: menuFragment"></header>
+
+<div layout:fragment="content"></div>
+
+<footer class="footer" th:replace="fragments/footer :: footerFragment"></footer>
+
+</html>
