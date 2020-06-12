@@ -55,6 +55,11 @@ public class BoardController {
 		return "board/boardList";
 	}
 	
+	@RequestMapping("/test/testPage")
+	public String testPage() {
+		return "/test/testPage";
+	}
+	
 	@RequestMapping("/board/boardWrite")
 	public String boardWrite() {
 		return "board/boardWrite";

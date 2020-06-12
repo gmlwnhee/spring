@@ -1,6 +1,9 @@
 package kr.inhatc.spring.user.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,7 @@ public class UserController {
 		//log.debug("===========>" + "여기!!!");
 		return "index";
 	}
-	
+
 	// GET(read), POST(creat), PUT(update), DELETE(delete)
 	//@GetMapping로 할 수 도
 	@RequestMapping(value = "/user/userList", method=RequestMethod.GET)
@@ -38,18 +41,33 @@ public class UserController {
 		model.addAttribute("list", list);
 		return "user/userList";
 	}
-	
+
 	@RequestMapping(value = "/user/userInsert", method=RequestMethod.GET)
-	public String userWrite() {
+	public String userWrite(Model model) {
+		List<String> enabledList = new ArrayList<String>();
+		enabledList.add("Yes");
+		enabledList.add("No");
+		
+		List<String> authorityList = new ArrayList<String>();
+		authorityList.add("ROLE_GUEST");
+		authorityList.add("ROLE_MEMBER");
+		authorityList.add("ROLE_ADMIN");
+		
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		map.put("enabledList", enabledList);
+		map.put("authorityList", authorityList);
+		
+		model.addAttribute("map",map);
+
 		return "user/userWrite";
 	}
-	
+
 	@RequestMapping(value = "/user/userInsert", method=RequestMethod.POST)
 	public String userInsert(Users user) {
 		userService.saveUsers(user);
 		return "redirect:/user/userList";
 	}
-	
+
 	@RequestMapping(value = "/user/userDetail/{id}", method=RequestMethod.GET)
 	public String userDetail(@PathVariable("id") String id, Model model) { //@PathVariable 경로처럼 가져옴
 		Users user = userService.userDetail(id);
@@ -57,17 +75,17 @@ public class UserController {
 		//System.out.println("============> " + user);
 		return "user/userDetail";
 	}
-	
+
 	@RequestMapping(value = "/user/userUpdate/{id}", method=RequestMethod.POST)
 	public String userUpdate(@PathVariable("id") String id, Users user) {
-		
+
 		// 아이디 설정
 		user.setId(id);
 		//System.out.println("=========> " + user);
 		userService.saveUsers(user);
 		return "redirect:/user/userList";
 	}
-	
+
 	@RequestMapping(value = "/user/userDelete/{id}", method=RequestMethod.GET)
 	public String useDelete(@PathVariable("id") String id) {
 		userService.userDelete(id);

@@ -1,54 +1,125 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>사용자 등록</title>
-<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></link>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
 
-<style>
-	table {
-		width: 100%;
-		border: 3px solid #87CEEB;
-	}
-</style>
-</head>
-<body>
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<div layout:fragment="content">
+
 	<div class="container outset">
-		<h2 class="text-primary">사용자 등록</h2>
-		<form id="frm" name="frm" method="POST" action="/user/userInsert">
-			<table class="table">
-				<tr>
-					<td class="text-primary">아이디</td>
-					<td><input type="text" class="form-control" id="id"
-						name="id" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">패스워드</td>
-					<td><input type="text" class="form-control" id="pw"
-						name="pw" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">이름</td>
-					<td><input type="text" class="form-control" id="name"
-						name="name" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">이메일</td>
-					<td><input type="text" class="form-control" id="email"
-						name="email" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">권한</td>
-					<td><input type="text" class="form-control" id="role"
-						name="role" /></td>
-				</tr>
+		<div class="row justify-contnet-center">
+			<div class="col-md-6">
+				<div class="card">
+					<header class="card-header">
+						<h2 class="card-title text-primary">사용자 등록</h2>
+					</header>
+					<article class="card-body">
+						<form id="frm" name="frm" method="POST" action="/user/userInsert">
+							<div class="form-group row">
+								<label for="inputID" class="col-sm-2 col-form-label">ID</label>
+								<div class="col-sm-10">
+									<input name="id" type="text" class="form-control" id="inputID"
+										placeholder="ID">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputPassword" class="col-sm-2 col-form-label">PW</label>
+								<div class="col-sm-10">
+									<input name="pw" type="password" class="form-control"
+										id="inputPassword" placeholder="Password">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputName" class="col-sm-2 col-form-label">Name</label>
+								<div class="col-sm-10">
+									<input name="name" type="text" class="form-control"
+										id="inputName" placeholder="Name">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+								<div class="col-sm-10">
+									<input name="email" type="email" class="form-control"
+										id="inputEmail" placeholder="Email">
+								</div>
+							</div>
+							<fieldset class="form-group">
+								<div class="row">
+									<label for="use" class="col-sm-2 col-form-label">Use</label>
+									<div class="col-sm-10">
+										<th:block th:each="enabledName : ${map.enabledList}">
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="enbled"
+													th:value="${enabledName}"> <label
+													class="form-check-label" th:text="${enabledName}"></label>
+											</div>
+										</th:block>
+									</div>
+								</div>
+							</fieldset>
+							<fieldset class="form-group">
+								<div class="row">
+									<label for="role" class="col-sm-2 col-form-label">Role</label>
+									<div class="col-sm-10">
+										<select name="role" id="inputState" class="form-control">
+											<th:block th:each="authorityName : ${map.authorityList}">
+												<div class="form-check">
+													<option th:value="${authorityName}"
+														th:text="${authorityName}"></option>
+												</div>
+											</th:block>
+										</select>
+									</div>
+								</div>
+							</fieldset>
+							<div class="form-group row">
+								<div class="col-sm-6">
+									<button type="submit" class="btn btn-info">Sign in</button>
+								</div>
+							</div>
+							<!-- <table class="table">
+										<tr>
+											<td class="text-primary">아이디</td>
+											<td><input type="text" class="form-control" id="id"
+												name="id" /></td>
+										</tr>
+										<tr>
+											<td class="text-primary">패스워드</td>
+											<td><input type="text" class="form-control" id="pw"
+												name="pw" /></td>
+										</tr>
+										<tr>
+											<td class="text-primary">이름</td>
+											<td><input type="text" class="form-control" id="name"
+												name="name" /></td>
+										</tr>
+										<tr>
+											<td class="text-primary">이메일</td>
+											<td><input type="text" class="form-control" id="email"
+												name="email" /></td>
+										</tr>
+										<tr>
+											<td class="text-primary">권한</td>
+											<td><input type="text" class="form-control" id="role"
+												name="role" /></td>
+										</tr>
 
-			</table>
-			<input type="submit" id="submit" value="저장" class="btn btn-info">
-		</form>
-
+									</table> -->
+							<!-- <input type="submit" id="submit" value="저장" class="btn btn-info"> -->
+						</form>
+					</article>
+				</div>
+			</div>
+		</div>
 	</div>
 
-</body>
+
+</div>
 </html>
