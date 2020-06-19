@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+<link rel="stylesheet" th:href="@{/css/styleChat.css}">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- 추가 -->
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	<!-- 추가 -->
+	<script src="/webjars/jquery/jquery.min.js"></script>
+	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	<script th:inline="javascript">
+		/* <![CDATA[*/
+		var roomId = /*[[${roomId}]]*/null;
+		/* ]]> */
+		/* <![CDATA[*/
+		var sender = /*[[${sender}]]*/null;
+		/* ]]> */
+		/* <![CDATA[*/
+		var receiver = /*[[${receiver}]]*/null;
+		/* ]]> */
+		/* <![CDATA[*/
+		var who = /*[[${who}]]*/null;
+		/* ]]> */
+	</script>
+	<script src="/js/app.js"></script>
+			<script>
+			$(document).ready(function() { // 엔터키 입력 가능하게
+				$("#Q").keypress(function(e) {
+					if (e.which == 13) {
+						sendChat(); // 실행할 이벤트
+						$('#Q').val(''); // 텍스트 내용 초기화
+						$('#Q').focus(); // 커서놓기
+						
+					}
+				});
+			});
+			function serverToday() {
+				var xmlHttp;
+				//분기하지 않으면 IE에서만 작동된다. 
+				if (window.XMLHttpRequest) { // IE 7.0 이상, 크롬, 파이어폭스일 경우 분기 
+					xmlHttp = new XMLHttpRequest();
+					xmlHttp
+							.open('HEAD', window.location.href.toString(),
+									false);
+					xmlHttp.setRequestHeader("Content-Type", "text/html");
+					xmlHttp.send('');
+				} else if (window.ActiveXObject) {
+					xmlHttp = new ActiveXObject('Msxml2.XMLHTTP');
+					xmlHttp
+							.open('HEAD', window.location.href.toString(),
+									false);
+					xmlHttp.setRequestHeader("Content-Type", "text/html");
+					xmlHttp.send('');
+				}
+				var st = xmlHttp.getResponseHeader("Date");
+				var curDate = new Date(st);
+				var curDateFmt;
+				var year = curDate.getFullYear();
+				var month = curDate.getMonth() + 1;
+				var day = curDate.getDate();
+				var hours = curDate.getHours();
+				var minutes = curDate.getMinutes();
+				if (parseInt(month) < 10) {
+					month = 0 + "" + month;
+				}
+				if (parseInt(day) < 10) {
+					day = 0 + "" + day;
+				}
+				if (parseInt(hours) < 10) {
+					hours = 0 + "" + hours;
+				}
+				if (parseInt(minutes) < 10) {
+					minutes = 0 + "" + minutes;
+				}
+				var curDateFmt = year + "-" + month + "-" + day + "T" + hours
+						+ ":" + minutes + ":00";
+				var d = new Date(curDateFmt);
+				/* var time1 = moment(d).format('h:mm a | MMMM DD') */
+				/* console.log(time1); */
+				return d;
+			}
+
+			$(document).ready(function() {
+			});
+		</script>
+</th:block>
+
+<div layout:fragment="content">
+
+	<!-- 상담원 채팅 -->
+		<div id="container" style = "margin-top: 20px;">
+		<aside>
+			<header>
+				<input type="text" placeholder="search">
+			</header>
+			<ul>
+				<li><img
+					th:src= "${img_r}"
+					alt="" width="50px" height="50px">
+					<div>
+						<h2 th:text="${receiver}">님</h2>
+						<h3>
+							<span class="status green"></span> online
+						</h3>
+					</div></li>
+					<li>
+					<div style = "padding-left: 20px;">
+						<h3>1. 욕설과 비방은 자제해주세요.</h3>
+						<h3>
+						  2. 개인정보를 올리지 마세요.
+						</h3>
+					</div></li>
+			</ul>
+		</aside>
+		<main>
+			<header>
+				<img
+					th:src="${img_s}"
+					alt="" width="50px" height="50px">
+				<div>
+					<h2 th:text="${sender}">님</h2>
+					<h3 style = "font-size : 5px;">HeeTalk 채팅창을 방문해주셔서 감사합니다.</h3>
+					<h3 style = "font-size : 5px;">더 나은 서비스가 되도록 노력하겠습니다.</h3>
+					<p style="font-size: 5px;">오늘도 좋은 하루 되세요.</p>
+				</div>
+			</header>
+			<ul id="chat">
+				<!-- ajax로 들어옴 -->
+			</ul>
+			<div id="footer">
+				<textarea id = "Q" placeholder="Type your message" onKeypress="javascript:if(event.keyCode==13) {search_onclick_submit}"></textarea>
+				<!-- <img
+					src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png"
+					alt=""> <img
+					src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png"
+					alt=""> --> 
+					<button class="btn-info btnAdd text-white" id="chatSend">전송</button>
+			</div>
+		</main>
+	</div>
+	
+</div>
+</html>

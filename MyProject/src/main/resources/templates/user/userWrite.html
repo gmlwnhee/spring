@@ -13,50 +13,50 @@
 
 <div layout:fragment="content">
 
-	<div class="container outset">
+	<div class="container outset" style="margin:20px 35%;">
 		<div class="row justify-contnet-center">
 			<div class="col-md-6">
-				<div class="card">
+				<div class="card" style="font-size:1.8em;">
 					<header class="card-header">
 						<h2 class="card-title text-primary">사용자 등록</h2>
 					</header>
 					<article class="card-body">
-						<form id="frm" name="frm" method="POST" action="/user/userInsert">
+						<form id="frm" name="frm" method="POST" action="/user/userInsert" enctype="multipart/form-data">
 							<div class="form-group row">
-								<label for="inputID" class="col-sm-2 col-form-label">ID</label>
-								<div class="col-sm-10">
+								<label for="inputID" class="col-sm-4 col-form-label">ID</label>
+								<div class="col-sm-12">
 									<input name="id" type="text" class="form-control" id="inputID"
 										placeholder="ID">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="inputPassword" class="col-sm-2 col-form-label">PW</label>
-								<div class="col-sm-10">
+								<label for="inputPassword" class="col-sm-4 col-form-label">PW</label>
+								<div class="col-sm-12">
 									<input name="pw" type="password" class="form-control"
 										id="inputPassword" placeholder="Password">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="inputName" class="col-sm-2 col-form-label">Name</label>
-								<div class="col-sm-10">
+								<label for="inputName" class="col-sm-4 col-form-label">Name</label>
+								<div class="col-sm-12">
 									<input name="name" type="text" class="form-control"
 										id="inputName" placeholder="Name">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-								<div class="col-sm-10">
+								<label for="inputEmail" class="col-sm-4 col-form-label">Email</label>
+								<div class="col-sm-12">
 									<input name="email" type="email" class="form-control"
 										id="inputEmail" placeholder="Email">
 								</div>
 							</div>
 							<fieldset class="form-group">
 								<div class="row">
-									<label for="use" class="col-sm-2 col-form-label">Use</label>
-									<div class="col-sm-10">
+									<label for="enabled" class="col-sm-4 col-form-label">Use</label>
+									<div class="col-sm-12">
 										<th:block th:each="enabledName : ${map.enabledList}">
 											<div class="form-check">
-												<input class="form-check-input" type="radio" name="enbled"
+												<input class="form-check-input" type="radio" name="enabled"
 													th:value="${enabledName}"> <label
 													class="form-check-label" th:text="${enabledName}"></label>
 											</div>
@@ -66,8 +66,8 @@
 							</fieldset>
 							<fieldset class="form-group">
 								<div class="row">
-									<label for="role" class="col-sm-2 col-form-label">Role</label>
-									<div class="col-sm-10">
+									<label for="role" class="col-sm-4 col-form-label">Role</label>
+									<div class="col-sm-12">
 										<select name="role" id="inputState" class="form-control">
 											<th:block th:each="authorityName : ${map.authorityList}">
 												<div class="form-check">
@@ -80,39 +80,11 @@
 								</div>
 							</fieldset>
 							<div class="form-group row">
+								<input type="file" id="files" name="files" style="font-size:0.6em;margin-left:15px"> 
 								<div class="col-sm-6">
-									<button type="submit" class="btn btn-info">Sign in</button>
+									<button type="submit" class="btn btn-info">등록</button>
 								</div>
 							</div>
-							<!-- <table class="table">
-										<tr>
-											<td class="text-primary">아이디</td>
-											<td><input type="text" class="form-control" id="id"
-												name="id" /></td>
-										</tr>
-										<tr>
-											<td class="text-primary">패스워드</td>
-											<td><input type="text" class="form-control" id="pw"
-												name="pw" /></td>
-										</tr>
-										<tr>
-											<td class="text-primary">이름</td>
-											<td><input type="text" class="form-control" id="name"
-												name="name" /></td>
-										</tr>
-										<tr>
-											<td class="text-primary">이메일</td>
-											<td><input type="text" class="form-control" id="email"
-												name="email" /></td>
-										</tr>
-										<tr>
-											<td class="text-primary">권한</td>
-											<td><input type="text" class="form-control" id="role"
-												name="role" /></td>
-										</tr>
-
-									</table> -->
-							<!-- <input type="submit" id="submit" value="저장" class="btn btn-info"> -->
 						</form>
 					</article>
 				</div>

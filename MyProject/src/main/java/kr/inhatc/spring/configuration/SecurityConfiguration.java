@@ -1,8 +1,11 @@
 package kr.inhatc.spring.configuration;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity//(debug = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
@@ -11,9 +14,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity security) throws Exception {
 		//super.configure(security);
 		//웹페이지 권한 설정
-		security.authorizeRequests().antMatchers("/").permitAll();
-		security.authorizeRequests().antMatchers("/user/**").hasAnyRole("MEMBER", "ADMIN");
-		security.authorizeRequests().antMatchers("/board/**").hasRole("ADMIN");
+		security.authorizeRequests().antMatchers("/","/board/**").permitAll();
+		security.authorizeRequests().antMatchers("/chat/**","/user/userMe","/user/userMeUpdate/**").hasAnyRole("ADMIN","MEMBER");
+		security.authorizeRequests().antMatchers("/user/**").hasRole("ADMIN");
 		
 		// RESTfull를 사용하기 위해서는 비활성화 /사이트 간 요청 위조 - 개발시만 disable
 		security.csrf().disable();
@@ -27,7 +30,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		// 로그아웃 요청 시 세션을 강제 종료하고 시작 페이지로 이동
 		security.logout().logoutUrl("/login/logout").invalidateHttpSession(true).logoutSuccessUrl("/");
 	}	
-
+	/***
+	 * 1. 개요 : 패스워드에 암호화 처리
+	 * 2. 처리 내용 : 암호화 처리
+	 * 
+	 * @Method Name : passwordEncoder
+	 * @return
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 
 
 }

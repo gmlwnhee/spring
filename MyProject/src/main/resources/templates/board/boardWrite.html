@@ -1,5 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +24,9 @@
 	}
 </style>
 </head>
-<body>
+<div layout:fragment="content">
 	<div class="container outset">
-		<h2 class="text-primary">게시판 작성</h2>
+		<h2 class="text-primary" style="margin:40px">게시판 작성</h2>
 		<form id="frm" name="frm" method="POST" action="/board/boardInsert" enctype="multipart/form-data">
 			<table class="table">
 				<tr>
@@ -29,10 +40,10 @@
 				</tr>
 			</table>
 			<input type="file" id="files" name="files" multiple="multiple">
-			<input type="submit" id="submit" value="저장" class="btn btn-info">
+			<input type="submit" id="submit" value="저장" class="btn btn-info" style="float:right">
 		</form>
 
 	</div>
 
-</body>
+</div>
 </html>

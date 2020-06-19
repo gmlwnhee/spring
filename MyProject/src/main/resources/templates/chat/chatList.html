@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout/default" style="background-color: #EDEAF9;">
-
-<!-- index.html 고유 CSS 추가 -->
+	layout:decorator="layout/default">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- index.html  고유 CSS 추가 -->
 <th:block layout:fragment="css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-<link rel="stylesheet" th:href="@{/css/style.css}">
+	<!-- <link rel="stylesheet" th:href="@{/css/style_QA.css}"> -->
 </th:block>
 
 <!-- index.html 고유 스크립트 추가 -->
@@ -17,7 +17,6 @@
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript"
 		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-	
 	<script th:inline="javascript">
 		/* <![CDATA[*/
 		var userId = /*[[${userId}]]*/null;
@@ -25,12 +24,13 @@
 	</script>
 	<script>
 		function makemake() {
-			var title = $('#roomTitle').val();
+			var title = $('#roomtitle').val();
 			var content = {
 				'roomMaker' : userId,
 				'title' : title,
 			};
-			$.ajax({
+			console.log(content)
+;			$.ajax({
 				url : 'http://localhost:18080/chat/makeRoom',
 				type : 'POST',
 				data : content,
@@ -39,8 +39,8 @@
 				},
 				success : function(data) {
 					getList();
-					$('#roomTitle').val('');
-					console.log(userId + "와" + title);
+					console.log(userId+title);
+					$('#roomtitle').val("");
 				},
 				error : function(jqXHR) {
 					alert("serialize err");
@@ -57,8 +57,8 @@
 						a += '<tr>';
 						a += '<td>' + value.roomId + '</td>';
 						a += '<td>' + value.title + '</td>';
-						a += '<td><a class = "btn" onclick="enter('
-								+ value.roomId + ');' + '">입장</a></td>';
+						a += '<td><a class = "btn" onclick="enter(' + value.roomId
+								+ ');' + '">입장</a></td>';
 						a += '</tr>';
 					});
 
@@ -71,8 +71,7 @@
 			})
 		}
 		function enter(id) {
-			location.href = "http://localhost:18080/chat/chat/" + id;
-
+			location.href="http://localhost:18080/chat/chat/" + id;		
 		}
 		$(document).ready(function() {
 			getList();
@@ -80,22 +79,44 @@
 	</script>
 </th:block>
 
-<div layout:fragment="content"
-	style="height: calc(100% -20em) !important;background-color: #EDEAF9">
-
-	<div class="row" style="height:900px;">
-		<div class="col" style="padding: 10px; ">
-			<div th:replace="fragments/main :: mainFragment"></div>
-			<!-- 메인 -->
-		</div>
-		<div class="" style="padding: 10px 10px 0px 10px; width: 35em;">
-			<!-- 채팅 -->
-			<div th:replace="fragments/chatList :: chatFragment"></div>
-
+<div layout:fragment="content">
+	<div class="container">
+		<div style="margin-top: 60px">
+			<div>
+				<h2 class="text-primary">채팅방 목록</h2>
+				<input id="roomtitle" type="text" placeholder="방 이름을 적어주세요." style="margin:20px 5px 20px 0">
+				<input class="btn-info btnAdd text-white" type="button" value="만들기" onclick="makemake();">
+			</div>
+			<div >
+				<div class="card" style="margin-bottm:80px">
+					<div class="card-header bg-info text-white">방 목록</div>
+					<div class="card-body">
+						<table class="table">
+							<colgroup>
+								<col width="10%" />
+								<col width="*%" />
+								<col width="20%" />
+							</colgroup>
+							<tbody id="collect">
+							<!-- 리스트 생성(ajax) -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<script  th:src="@{/js/script.js}"></script>
 </div>
 
 </html>
-<!-- Copyright (c) 2020 by LeFourbeFromage (https://codepen.io/lefourbefromage/pen/qBbZWEJ) -->
+
+
+
+
+
+
+
+
+
+
+

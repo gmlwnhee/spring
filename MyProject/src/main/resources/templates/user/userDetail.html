@@ -1,5 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,47 +24,65 @@ table {
 </style>
 </head>
 <body>
+<div layout:fragment="content">
 	<div class="container outset">
-		<h2 class="text-primary">사용자 정보</h2>
-		<form id="frm" name="frm" method="POST" th:action="'/user/userUpdate/' + ${user.id}">
+		<h2 class="text-primary" style="margin:20px;">사용자 정보</h2>
+		<form id="frm" name="frm" method="POST"
+			th:action="'/user/userUpdate/' + ${user.id}">
 			<table class="table">
-				<tr>
-					<td class="text-primary">아이디</td>
-					<td><input type="text" class="form-control" id="id" name="id"
-						th:value="${user.id}" disabled="disabled" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">패스워드</td>
-					<td><input type="text" class="form-control" id="pw" name="pw"
-						th:value="${user.pw}" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">이름</td>
-					<td><input type="text" class="form-control" id="name"
-						name="name" th:value="${user.name}" /></td>
-				</tr>
-				<tr>
-					<td class="text-primary">이메일</td>
-					<td><input type="text" class="form-control" id="email"
-						name="email" th:value="${user.email}" /></td>
-				</tr>
+				<colgroup>
+					<col width="20%" />
+					<col width="15%" />
+					<col width="*" />
+				</colgroup>
+				<!-- <caption>게시글 상세내용</caption> -->
+				<tbody>
+					<tr>
+						<td rowspan="5"><img th:src="@{${user.m_image}}" alt="갱신전..." /></td>
+						<th class="info" scope="row">아이디</th>
+						<td><input type="text" class="form-control" id="id" name="id"
+							th:value="${user.id}" disabled="disabled" /></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">이름</th>
+						<td><input class="form-control" type="text" id="name"
+							name="name" th:value="${user.name}" /></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">이메일</th>
+						<td><input type="text" class="form-control" id="email"
+							name="email" th:value="${user.email}" /></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">비밀번호</th>
+						<td><input type="text" class="form-control" id="pw" name="pw"
+							th:value="${user.pw}" /></td>
+					</tr>
+					<tr>
+						<th class="info" scope="row">가입일</th>
+						<td th:text="${user.joinDate}"></td>
+					</tr>
+
+				</tbody>
+				<!-- 
 				<tr>
 					<td class="text-primary">권한</td>
 					<td><input type="text" class="form-control" id="role"
 						name="role" th:value="${user.role}" /></td>
-				</tr>
-
+				</tr> -->
 			</table>
-			<input type="submit" id="submit" value="수정" class="btn btn-info">
+			<input type="hidden" name="role" th:value="${user.role}"> <input
+				type="hidden" name="enabled" value="Yes"> <input
+				type="submit" id="submit" value="수정" class="btn btn-info">
 			<button class="btn btn-info">
-				<a href="/user/userDelete/" th:attrappend="href=${user.id}">삭제</a>
+				<a href="/user/userDelete/" th:attrappend="href=${user.id}" style="color:white">삭제</a>
 			</button>
 			<button class="btn btn-info">
-				<a href="/user/userList">리스트</a>
+				<a href="/user/userList" style="color:white">리스트</a>
 			</button>
 		</form>
 
 	</div>
-
+</div>
 </body>
 </html>

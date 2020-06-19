@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- index.html  고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+</th:block>
+
+<header th:fragment="mainFragment">
+	<div class="wrapper" style="width:70%;font-size:3em; margin-top:300px">
+		<div data-text></div>
+		<span class="item">Welcome to HeeTalk.</span>
+		<span class="item">You can write on the board.</span> <span class="item">You can chat with other people.</span>
+		
+		<h2 style="font-size:3em">Just do it!</h2>
+	</div>
+</header>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+

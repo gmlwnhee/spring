@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- index.html  고유 CSS 추가 -->
+<th:block layout:fragment="css">
+	<link rel="stylesheet" th:href="@{/css/style_QA.css}">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/styleCon.css}">
+	<script th:inline="javascript">
+		/* <![CDATA[*/
+		var userId = /*[[${userId}]]*/null;
+		/* ]]> */
+	</script>
+	<script>
+		var userContent = "";
+		var conContent = "";
+		function next() {
+			if (confirm("정말 저장하시겠습니까?")) {
+				location.href = '/chat/deleteState/'+userId;
+			} else {
+			}
+		}
+
+		function getValue() {
+
+			$("input[name=checkboxUser]:checked").each(function() {
+				if ($("input:checkbox[name=checkboxUser]:checked").length > 1) {
+					userContent = userContent + ' ' + $(this).val();
+				} else {
+					userContent = $(this).val();
+				}
+				console.log(userContent);
+			});
+			$("input[name=checkboxCon]:checked").each(function() {
+				if ($("input:checkbox[name=checkboxCon]:checked").length > 1) {
+					conContent = conContent + ' ' + $(this).val();
+				} else {
+					conContent = $(this).val();
+				}
+				console.log(conContent);
+			});
+
+		}
+	</script>
+	<script>
+		function combineQA() {
+			getValue();
+			var content = {
+				'answer' : conContent,
+				'question' : userContent,
+				'userId' : userId
+			};
+			$.ajax({
+				url : 'http://localhost:18080/chat/combineQA',
+				type : 'POST',
+				data : content,
+				beforeSend : function(jqXHR) {
+					console.log("호출전");
+				},
+				success : function(data) {
+					getList(); 
+					conContent = "";
+					userContent = "";
+					$("input:checkbox[name=checkboxUser]:checked").parent()
+							.addClass('active-color');
+					$("input:checkbox[name=checkboxCon]:checked").parent()
+							.addClass('active-color');
+					$("input:checkbox[name=checkboxUser]:checked").attr(
+							"checked", false);
+					$("input:checkbox[name=checkboxCon]:checked").attr(
+							"checked", false);
+				},
+				error : function(jqXHR) {
+					alert("serialize err");
+				}
+			})
+		}
+		function getList() {
+			$.ajax({
+						type : 'POST',
+						url : 'http://localhost:18080/chat/showQA',
+						data : {
+							'userId' : userId
+						},
+						success : function(data) {
+							var a = '';
+							$
+									.each(
+											data,
+											function(key, value) {
+												a += '<tr>';
+												a += '<td>' + value.question + '</td>';
+												a += '<td>' + value.answer + '</td>';
+												a += '<td><a class = "btn" onclick="delQA('
+														+ value.id
+														+');'
+														+ '">삭제</a></td>';
+												a += '</tr>';
+											});
+
+							$("#collect").html(a);
+
+						},
+						error : function(jqXHR) {
+							alert("serialize err");
+						}
+					})
+		}
+		function delQA(id) {
+			$.ajax({
+				url : 'http://localhost:18080/chat/deleteQA/'+id,
+				type : 'GET',
+				beforeSend : function(jqXHR) {
+					console.log("호출전");
+				},
+				success : function(data) {
+					console.log("성공");
+					getList(); 
+				},
+				error : function(jqXHR) {
+					alert("serialize err");
+				}
+			})
+		}
+		$(document).ready(function() {
+			getList();
+		});
+	</script>
+</th:block>
+
+<div layout:fragment="content">
+	<!-- 상담원 채팅 -->
+	<div style="margin-top: 60px">
+		<div class="box box1">
+			<div class="card">
+				<div class="card-header bg-info text-white">사용자</div>
+				<div class="card-body">
+					<table class="table">
+						<colgroup>
+							<col width="10%" />
+							<col width="*%" />
+						</colgroup>
+						<tbody>
+							<tr th:if="${#lists.size(list2)} > 0" th:each="vo : ${list2}">
+								<td><input type="checkbox" name="checkboxUser" id="cb1"
+									th:value="${vo.content}"></td>
+								<td><label class="ch" for="cb1" th:text="${vo.content}"></label></td>
+							</tr>
+							<tr th:unless="${#lists.size(list2)} > 0">
+								<td colspan="3" class="text-center">조회된 결과가 없습니다.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="box box2">
+			<div class="card">
+				<div class="card-header bg-info text-white">상담원</div>
+				<div class="card-body">
+					<table class="table">
+						<colgroup>
+							<col width="10%" />
+							<col width="*%" />
+						</colgroup>
+						<tbody>
+							<tr th:if="${#lists.size(list1)} > 0" th:each="vo : ${list1}">
+								<td><input type="checkbox" name="checkboxCon" id="cb2"
+									th:value="${vo.content}"></td>
+								<td><label class="ch" for="cb2" th:text="${vo.content}"></label></td>
+							<tr th:unless="${#lists.size(list1)} > 0">
+								<td colspan="3" class="text-center">조회된 결과가 없습니다.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="box box3">
+			<div class="card">
+				<div class="card-header bg-info text-white">정리본</div>
+				<div class="card-body">
+					<table class="table">
+						<colgroup>
+							<col width="45%" />
+							<col width="45%" />
+							<col width="10%" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">질문</th>
+								<th scope="col">답변</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody id="collect">
+							<!-- 여기에 질문과 대답이 일대일 매칭 -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div>
+			<button class="btn btn-info btnAdd text-white" onclick="combineQA()">
+				추가</button>
+			<button class="btn btn-info btnSave text-white" onclick="next()">
+				저장
+				<!-- 정리본의 내용을 저장 -->
+			</button>
+		</div>
+	</div>
+</div>
+</html>

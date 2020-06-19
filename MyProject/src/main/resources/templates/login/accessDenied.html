@@ -2,10 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+	crossorigin="anonymous">
 <title>접근 권한 에러</title>
 </head>
 <body>
-	<h1 >접근권한 없음</h1>
-	<h6><a th:href="@{/login/login}">여기</a>눌러</h6>
+	<h1 class="text-primary" style="font-size:6em; margin:40px">접근권한 없음</h1>
+	<h1 style="margin:60px">접근권한이 없습니다.</h1>
+	<h6 style="margin:0 60px">관리자이시면 <a th:href="@{/login/login}">여기</a>를 눌러 다시 로그인해주세요.</h6>
 </body>
 </html>

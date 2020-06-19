@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- index.html  고유 CSS 추가 -->
+<th:block layout:fragment="css">
+	<link rel="stylesheet" th:href="@{/css/style_QA.css}">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+</th:block>
+
+<header th:fragment="chatFragment">
+	<div class="container">
+		<div style="margin-top: 60px">
+			<div>
+				<h4 class="text-primary" style="margin-right:15px">If you want chat, You need to log in.</h4>
+				<input id="roomTitle" type="text" placeholder="방 이름을 적어주세요." style="margin:20px 5px 20px 0">
+				<input class="btn-info btnAdd text-white" type="button" value="만들기" onclick="makemake();">
+			</div>
+			<div >
+				<div class="card" style="margin:0 10px 80px 0">
+					<div class="card-header bg-info text-white">방 목록</div>
+					<div class="card-body">
+						<table class="table">
+							<colgroup>
+								<col width="10%" />
+								<col width="*%" />
+								<col width="20%" />
+							</colgroup>
+							<tbody id="collect">
+							<!-- 리스트 생성(ajax) -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+

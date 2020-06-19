@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Users {
 	
 	@Id
-	@Column(name = "USER_ID")
+	@Column(name = "USER_ID", unique=true)
 	private String id;
 	private String pw;
 	private String name;
@@ -32,4 +32,7 @@ public class Users {
 	private Date joinDate;
 	private String enabled;
 	private String role;
+	
+	// 파일 관리를 위한 리스트 추가
+	private String m_image;
 }
