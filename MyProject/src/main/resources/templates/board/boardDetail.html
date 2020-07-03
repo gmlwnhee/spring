@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/default">
 
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -9,6 +9,131 @@
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+	<script th:inline="javascript">
+		/* <![CDATA[*/
+		var bno = /*[[${board.boardIdx}]]*/null;
+		/* ]]> */
+	</script>
+	<script>
+		function commentList() {
+			$.ajax({
+						url : '/comment/commentList',
+						type : 'post',
+						data : {
+							'bno' : bno
+						},
+						beforeSend : function(jqXHR) {
+							console.log("호출전");
+						},
+						success : function(data) {
+							var a = '';
+							$
+									.each(
+											data,
+											function(key, value) {
+												a += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;">';
+												a += '<div class="commentInfo'+value.cno+'">'
+														+ '작성시간 : '
+														+ moment(value.regDate).format('MMMM DD h:mm a ')
+														+ ' / 작성자 : '
+														+ value.writer;
+												a += '<a class="text-primary" onclick="commentUpdate('
+														+ value.cno
+														+ ',\''
+														+ value.writer
+														+ '\',\''
+														+ value.content
+														+ '\');"> 수정 </a>';
+												a += '<a class="text-primary" onclick="commentDelete('
+														+ value.cno
+														+ ');"> 삭제 </a> </div>';
+												a += '<div class="commentContent'+value.cno+'"> <p> 내용 : '
+														+ value.content
+														+ '</p>';
+												a += '</div></div>';
+											});
+
+							$(".commentList").html(a);
+						},
+						error : function(jqXHR) {
+							alert("오류");
+						}
+					});
+		}
+
+		function commentInsert() {
+			if($('#content').val().trim()==""){
+				alert("입력해주세요"); return;
+				} 
+			$.ajax({
+				url : '/comment/commentInsert',
+				type : 'post',
+				data : {'bno':bno,'content':$("#content").val()},
+				beforeSend : function(jqXHR) {
+					console.log("댓글추가전");
+				},
+				success : function(data) {
+					commentList();
+					$('[name=content]').val('');
+				},
+				error : function(jqXHR) {
+					alert("오류");
+				}
+			});
+		}
+
+		//댓글 수정 - 댓글 내용 출력을 input 폼으로 변경 
+		function commentUpdate(cno, writer, content) {
+			var a = '';
+
+			a += '<div class="input-group">';
+			a += '<input type="text" class="form-control" name="content_'+cno+'" value="'+content+'"/>';
+			a += '<span class="input-group-btn"><button class="btn btn-info" style="margin-left:5px" type="button" onclick="commentUpdateProc('
+					+ cno + ',\''+ writer +'\');">수정</button> </span>';
+			a += '</div>';
+
+			$('.commentContent' + cno).html(a);
+
+		}
+
+		function commentUpdateProc(cno,writer) {
+			var updateContent = $('[name=content_' + cno + ']').val();
+
+			$.ajax({
+				url : '/comment/commentUpdate',
+				type : 'post',
+				data : {
+					'bno' : bno,
+					'content' : updateContent,
+					'cno' : cno,
+					'writer' : writer
+				},
+				success : function(data) {
+					commentList(bno); //댓글 수정후 목록 출력 
+				}
+			});
+		}
+
+		function commentDelete(cno) {
+			$.ajax({
+				url : '/comment/commentDelete/' + cno,
+				type : 'get',
+				success : function(data) {
+					commentList(bno); //댓글 삭제후 목록 출력 
+				}
+			});
+		}
+
+		$(document).ready(function() {
+			commentList();  //페이지 로딩시 댓글 목록 출력 
+		});
+	</script>
 </th:block>
 <head>
 <meta charset="UTF-8">
@@ -25,7 +150,7 @@ table {
 </head>
 <div layout:fragment="content">
 	<div class="container outset">
-		<h2 class="text-primary" style="margin:40px">게시판 상세</h2>
+		<h2 class="text-primary" style="margin: 40px">게시판 상세</h2>
 		<form id="frm" name="frm" method="POST">
 			<table class="table">
 				<colgroup>
@@ -62,19 +187,36 @@ table {
 			</table>
 			<input type="hidden" name="boardIdx" th:value="${board.boardIdx}">
 		</form>
-		<div class="list-group" style="margin:20px">
-			<a class = "list-group-item" th:each="file : ${board.fileList}"
+		<div class="list-group" style="margin: 20px">
+			<a class="list-group-item" th:each="file : ${board.fileList}"
 				th:href="@{/board/downloadBoardFile(idx=${file.idx}, boardIdx=${file.boardIdx})}"
 				th:text="|${file.originalFileName}(${file.fileSize}kb)|"></a>
 		</div>
 		<input type="button" id="list" value="목록으로" class="btn btn-info">
 		<input type="button" id="edit" value="수정하기" class="btn btn-info">
 		<input type="button" id="delete" value="삭제하기" class="btn btn-info">
+
+		<div class="container" style="padding-top: 30px">
+			<label for="content" class="text-primary" style="font-size:25px">comment</label>
+			<form name="commentInsertForm">
+				<div class="input-group" style="padding-top: 10px">
+					<input type="hidden" name="bno" value="${board.boardIdx}" /> <input
+						type="text" class="form-control" id="content" name="content"
+						placeholder="댓글을 달아보세요!">
+						 <span class="input-group-btn">
+						<button class="btn btn-info" type="button"
+							onclick="commentInsert()" style="margin-left: 5px">등록</button>
+					</span>
+				</div>
+			</form>
+		</div>
+
+		<div class="container" style="padding: 30px 15px 45px 15px">
+			<div class="commentList"></div>
+		</div>
+
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
-		integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs="
-		crossorigin="anonymous"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#list").on("click", function() {

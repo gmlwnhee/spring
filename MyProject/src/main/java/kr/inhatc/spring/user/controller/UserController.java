@@ -38,22 +38,17 @@ public class UserController {
 	@RequestMapping("/")
 	public String hello(Model model) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		log.debug("===========>11==" + principal);
+		//log.debug("===========>" + principal);
 		if(principal.equals("anonymousUser")==false) {
 		UserDetails userDetails = (UserDetails)principal;
 		String uid = userDetails.getUsername();
-		log.debug("===========>" + uid);
+		//log.debug("===========>" + uid);
 		model.addAttribute("userId", uid);}
 		List<Users> list = userService.userList();
 		model.addAttribute("list", list);
 		 
 		//log.debug("===========>" + "여기!!!");
 		return "index";
-	}
-	@RequestMapping("/login/index")
-	public String dd() {
-		//log.debug("===========>" + "여기!!!");
-		return "login/index";
 	}
 
 	// GET(read), POST(creat), PUT(update), DELETE(delete)

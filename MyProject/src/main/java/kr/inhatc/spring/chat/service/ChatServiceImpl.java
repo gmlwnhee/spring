@@ -19,33 +19,12 @@ public class ChatServiceImpl implements ChatService {
 	public void saveMessage(ChatLog chatLog) {
 		chatRepository.save(chatLog);
 	}
-	
-//	@Override
-//	public List<ChatLog> findChat(String userId, String who) {
-//		List<ChatLog> list = chatRepository.findByUserIdAndNumNotAndWhoOrderBySendTime(Integer.parseInt(userId), 0, who);
-//		return list;
-//	}
 
-//	@Override
-//	public void saveRealData(ChatData chatData) {
-//		realRepository.save(chatData);
-//	}
-//
-//	@Override
-//	public List<ChatData> showData(int userId) {
-//		List<ChatData> list = realRepository.findByUserId(userId);
-//		return list;
-//	}
-//
-//	@Override
-//	public ChatData findContent(int id) {
-//		ChatData data = realRepository.findById(id);
-//		return data;
-//	}
-//
-//	@Override
-//	public void contentDelete(ChatData data) {
-//		realRepository.delete(data);
-//	}
+	@Override
+	public List<ChatLog> showChatList(int roomId) {
+		List<ChatLog> list = chatRepository.findByRoomIdOrderBySendTime(roomId);
+		return list;
+	}
+
 	
 }

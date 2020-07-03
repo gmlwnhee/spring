@@ -14,8 +14,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity security) throws Exception {
 		//super.configure(security);
 		//웹페이지 권한 설정
-		security.authorizeRequests().antMatchers("/","/board/**").permitAll();
-		security.authorizeRequests().antMatchers("/chat/**","/user/userMe","/user/userMeUpdate/**").hasAnyRole("ADMIN","MEMBER");
+		security.authorizeRequests().antMatchers("/","/board/**","/comment/commentList").permitAll();
+		security.authorizeRequests().antMatchers("/chat/**","/user/userMe","/user/userMeUpdate/**","/comment/**").hasAnyRole("ADMIN","MEMBER");
 		security.authorizeRequests().antMatchers("/user/**").hasRole("ADMIN");
 		
 		// RESTfull를 사용하기 위해서는 비활성화 /사이트 간 요청 위조 - 개발시만 disable

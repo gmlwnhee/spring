@@ -17,7 +17,7 @@
 			SELECT board_seq.nextval FROM DUAL
 		</selectKey>
 		INSERT INTO t_board (BOARD_IDX, TITLE, CONTENTS, CREATE_DATETIME, CREATOR_ID)
-		VALUES (#{boardIdx}, #{title}, #{contents}, sysdate, 'admin')
+		VALUES (#{boardIdx}, #{title}, #{contents}, sysdate, #{creatorId})
 	</insert>
 	
 	<select id="boardDetail" parameterType="int" resultType="kr.inhatc.spring.board.dto.BoardDto">

@@ -9,6 +9,21 @@
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
+	<script>
+		$(function() {
+
+			$("#change").click(function(e) {
+				console.log($('#pw').val());
+				if ($('#pw').val().trim() == "") {
+					alert("비밀번호를 입력해주세요.");
+					return false;
+				} else {
+					alert("변경이 완료되었습니다.");
+				}
+
+			});
+		});
+	</script>
 </th:block>
 <head>
 <!-- 내 정보만 가져오기 위한 페이지 (본인만 접근 가능) -->
@@ -23,17 +38,6 @@ table {
 	border: 3px solid #87CEEB;
 }
 </style>
-<script>
-$(document).ready(function() {
-		$("#change").on("click", function() {
-			if($("#pw").val()==''){
-				alert("비밀번호를 입력해주세요.");
-				return false;
-			}else {
-			alert("변경이 완료되었습니다.");}
-		})
-})
-</script>
 </head>
 <body>
 	<div layout:fragment="content">

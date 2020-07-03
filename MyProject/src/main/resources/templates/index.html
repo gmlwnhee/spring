@@ -24,6 +24,16 @@
 		/* ]]> */
 	</script>
 	<script>
+	//보이기
+	 function div_show() {
+	  document.getElementById("text_div").style.display = "block";
+	 }
+	 
+	 //숨기기
+	 function div_hide() {
+	  document.getElementById("text_div").style.display = "none";
+	 }
+
 		function makemake() {
 			var title = $('#roomTitle').val();
 			var content = {
@@ -75,6 +85,14 @@
 
 		}
 		$(document).ready(function() {
+			if(userId==null){
+				div_show();
+			}else{
+				div_hide();
+				  if(userId=="admin"){
+					  document.getElementById("admin_div").style.display = "block";
+				  }
+			}
 			getList();
 		});
 	</script>

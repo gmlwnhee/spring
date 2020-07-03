@@ -1,7 +1,7 @@
 var stompClient = null;
 var num = 0;
 
-if(sender!=null){
+if(sender!==null){
 	connect();
 }
 
@@ -13,7 +13,9 @@ function connect() {
 	num = 0;
 	stompClient.connect({}, function (frame) {
 		console.log('Connected: ' + frame);
-
+		if(who=='방문자'){
+			sendHello();
+		}
 		// topic 뒤에 식별번호 sender (보내는 사람)
 		stompClient.subscribe('/topic/'+ sender, function (chatLog) {
 			//보낼때말고 받을 때도 시간필요
@@ -41,8 +43,17 @@ function sendChat() {
 	stompClient.send("/app/chat/send", {}, JSON.stringify(data));
 	showMe(); 
 }
-
+function sendHello() {
+	d = serverToday();
+	time = moment(d).format('h:mm a | MMMM DD');
+	data = {'roomId':roomId,'receiver':receiver, 'sender':sender,'content':receiver+'님이 입장하셨습니다.', 'who':who,'num':0};
+	stompClient.send("/app/chat/send", {}, JSON.stringify(data));
+}
 function showChat(chatLog) {
+	if(chatLog.num==0){
+		alert(receiver+'님이 들어오셨습니다.');
+		location.reload();
+	}else{
 	$("#chat").append("<li class='you'>"
 			+ "<div class='entete'>"
 			+ "<span class='status green'></span>"
@@ -53,7 +64,7 @@ function showChat(chatLog) {
 			+ "<div class='message'>"+ chatLog.content +"</div>"
 			+ "</li>");
 	$('#chat').scrollTop($('#chat')[0].scrollHeight);
-
+	}
 }
 function showMe() {
 	$('#chat').append(
@@ -68,10 +79,6 @@ function showMe() {
 
 $(function () {
 
-	$( "#help" ).click(function(e) {
-		if(userId!=null){
-			e.preventDefault();}
-	});
 	$( "#back" ).click(function(e) { 
 		sendBye();
 		disconnect();});

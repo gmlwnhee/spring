@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -39,11 +41,6 @@ public class BoardController {
 	//컨트롤러에 서비스를 불러옴
 	@Autowired
 	private BoardService boardService;
-
-//	@RequestMapping("/")
-//	public String hello() {
-//		return "index"; // index.html
-//	}
 	
 	@RequestMapping("/board/boardList")
 	public String boardList(Model model) {
@@ -67,6 +64,13 @@ public class BoardController {
 	
 	@RequestMapping("/board/boardInsert")
 	public String boardInsert(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String uid = "guest";
+		if(principal.equals("anonymousUser")==false) {
+		UserDetails userDetails = (UserDetails)principal;
+		uid = userDetails.getUsername();
+		}
+		board.setCreatorId(uid);
 		boardService.boardInsert(board, multipartHttpServletRequest);
 		return "redirect:/board/boardList";
 	}

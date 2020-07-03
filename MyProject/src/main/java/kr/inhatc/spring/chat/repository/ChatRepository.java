@@ -11,5 +11,5 @@ import kr.inhatc.spring.chat.entity.ChatLog;
 @Repository
 public interface ChatRepository extends CrudRepository<ChatLog, String>{
 
-	//List<ChatLog> findByUserIdAndNumNotAndWhoOrderBySendTime(int userId, int num, String who);
+	List<ChatLog> findByRoomIdOrderBySendTime(int roomId);
 }

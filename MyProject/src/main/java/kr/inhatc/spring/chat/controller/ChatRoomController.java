@@ -1,11 +1,10 @@
 package kr.inhatc.spring.chat.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +34,16 @@ public class ChatRoomController {
 	private RoomService roomService;
 	@Autowired
 	private ImageRepository imageRepository;
-	//	@Autowired
-	//	private ChatService chatService;
+	@Autowired
+	private ChatService chatService;
 
-	//	@RequestMapping(value = "/chat/mainCon", method=RequestMethod.GET)
-	//	public String mainCon(Model model) {
-	//		List<Room> list =roomService.showUserList();
-	//		model.addAttribute("list", list);
-	//		return "chat/mainCon";
-	//	}
+	// 과거 채팅내역 불러오기
+	@RequestMapping(value = "/chat/showPastChat", method=RequestMethod.POST)
+	@ResponseBody
+	public List<ChatLog> showPastChat(ChatLog chatLog) {
+		List<ChatLog> list =chatService.showChatList(chatLog.getRoomId());
+		return list;
+	}
 	// 채팅방 목록
 	@RequestMapping(value = "/chat/chatList", method=RequestMethod.GET)
 	public String chatList(Model model) {
@@ -70,8 +70,10 @@ public class ChatRoomController {
 		List<Room> list = roomService.showRoom();
 		return list;
 	}
+	
+	// 채팅창
 	@RequestMapping(value = "/chat/chat/{roomId}", method=RequestMethod.GET)
-	public String conQA(@PathVariable("roomId") int roomId, Model model) {
+	public String conQA(@PathVariable("roomId") int roomId, Model model, HttpServletResponse response) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserDetails userDetails = (UserDetails)principal;
 		String uid = userDetails.getUsername();
@@ -82,8 +84,22 @@ public class ChatRoomController {
 		String sender;
 		// 방장과 다른 사람일 경우
 		if(!uid.equals(room.getRoomMaker())) {
-			room.setVisiter(uid);
-			roomService.saveRoom(room);
+			// 1:1 로 꽉찼을때
+			if(room.getVisiter()==null) {
+				room.setVisiter(uid);
+				roomService.saveRoom(room);
+			}else if(!room.getVisiter().isEmpty()&&!room.getVisiter().equals(uid)) {
+					response.setContentType("text/html; charset=UTF-8");
+					PrintWriter out;
+					try {
+						out = response.getWriter();
+						out.println("<script>alert('이미 정원이 다 찼습니다.'); history.go(-1);</script>");
+						out.flush();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					return "chat/chatList";
+				}
 			receiver = room.getRoomMaker();
 			sender = room.getVisiter();
 			model.addAttribute("receiver", receiver);
@@ -108,7 +124,7 @@ public class ChatRoomController {
 			image_s = image_sender.getStoredFilePath();
 		}
 		String img_s = image_s.replaceFirst("src/main/resources/static", "");
-		
+
 		Images image_receiver = imageRepository.findByUserId(receiver);
 		if(image_receiver == null) {
 			image_r = "src/main/resources/static/images-member/user.png";
@@ -121,90 +137,5 @@ public class ChatRoomController {
 
 		return "chat/chat";
 	}
-
-	//	@RequestMapping(value = "/chat/conProcess/{userId}", method=RequestMethod.GET)
-	//	public String consProcess(@PathVariable("userId") String userId, Model model) {
-	//		List<ChatLog> chatList1 = chatService.findChat(userId, "상담원");
-	//		List<ChatLog> chatList2 = chatService.findChat(userId, "사용자");
-	//		model.addAttribute("list1",chatList1);
-	//		model.addAttribute("list2",chatList2);
-	//		return "chat/conProcess";
-	//	}
-	//	
-	//	@RequestMapping(value = "/chat/deleteState/{userId}", method=RequestMethod.GET)
-	//	public String deleteState(@PathVariable("userId") String userId) {
-	//		Room room = roomService.findRoom(userId);
-	//		roomService.roomDelete(room);
-	//		return "redirect:/chat/mainCon";
-	//	}
-	//	@RequestMapping(value = "/chat/ConQA/{userId}", method=RequestMethod.GET)
-	//	public String conQA(@PathVariable("userId") String userId, Model model,HttpServletRequest request) {
-	//		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	//		UserDetails userDetails = (UserDetails)principal;
-	//		String uid = userDetails.getUsername();
-	//		log.debug("===========>" + uid);
-	//		
-	//		//상담상태 변경 및 상담원 번호 등록
-	//		Room room = roomService.findRoom(userId);
-	//		room.setConsId(Integer.parseInt(conId));
-	//		room.setState("상담중");
-	//		roomService.saveRoom(room);
-	//		
-	//		//상담원은 전달가능
-	//		model.addAttribute("receiver", userId);
-	//		model.addAttribute("sender", conId);
-	//		model.addAttribute("who","상담원");
-	//		
-	//		return "chat/ConQA";
-	//	}
-	//	@RequestMapping("/main/chatbot")
-	//	public String chatbot() {
-	//		return "main/AIbotChat";
-	//	}
-	//	@RequestMapping(value = {"/main/Human/{userId}"}, method=RequestMethod.GET)
-	//	public String Human(@PathVariable("userId") Optional<String> userId, Model model) {
-	//		String uid = userId.get();
-	//		model.addAttribute("sender", uid);
-	//		int conId = roomService.findId(uid);
-	//		model.addAttribute("receiver", Integer.toString(conId));
-	//		model.addAttribute("who","사용자");
-	//		
-	//		return "main/HumanChat";
-	//	}
-	//	@RequestMapping(value = {"/main/mainQA","/main/mainQA/{userId}"}, method=RequestMethod.GET)
-	//	public String confirmerList(@PathVariable("userId") Optional<String> userId, Model model) {
-	//		if (userId.isPresent()){
-	//			String uid = userId.get();
-	//			model.addAttribute("sender", uid);
-	//			int conId = roomService.findId(uid);
-	//			model.addAttribute("receiver", Integer.toString(conId));
-	//			model.addAttribute("who","사용자");
-	//			return "main/mainQAInfoHuman";
-	//			
-	//		} else {
-	//			return "main/mainQAInfoAI";
-	//		}
-	//
-	//		
-	//	}
-
-	//	// 새로운 사용자 번호 생성
-	//	@RequestMapping(value = "/main/idMake", method=RequestMethod.GET)
-	//	public String idMake(Room room) {
-	//		Random rand = new Random();
-	//		long seed = System.currentTimeMillis();
-	//		rand = new Random(seed);
-	//		int randId = rand.nextInt(2147483547)+100;
-	//		//중복 방지 - 이미 있는 사용자인지 확인
-	//		while (roomService.findId(randId)!=-1) {
-	//			randId = rand.nextInt(2147483647);
-	//		}
-	//		//room.setUserId(randId);
-	//		room.setState("대기중");
-	//		roomService.saveRoom(room);
-	//
-	//		return "redirect:/main/Human/" + randId;
-	//	}
-
 
 }
